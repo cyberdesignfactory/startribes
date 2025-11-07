@@ -21,7 +21,9 @@ Ensure the following are installed:
 Steps:
 - git clone https://github.com/cyberdesignfactory/startribes
 - cd startribes
-- cd apps/viewer
+- cd apps/components
+- lein install
+- cd ../viewer
 - npm i
 - npx shadow-cljs watch app
 
