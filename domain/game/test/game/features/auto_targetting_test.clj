@@ -7,11 +7,17 @@
    :controls {:thrust 0.1
               :rudder 0.1}
    :auto-targetting? true
-   :fs {:t 4000
-        :pos {:x x :y y}
-        :rot 0.0
-        :vel 0.0
-        :ang-vel 0.0}})
+
+   :pos {:x x :y y}
+   :rot 0.0
+
+   ;; :fs {:t 4000
+   ;;      :pos {:x x :y y}
+   ;;      :rot 0.0
+   ;;      :vel 0.0
+   ;;      :ang-vel 0.0}
+
+   })
 
 (deftest auto-targetting-test
   (let [test-world

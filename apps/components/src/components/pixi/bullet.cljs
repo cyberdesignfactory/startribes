@@ -24,6 +24,15 @@
 
     [:> Container {:x bullet-x :y bullet-y}
      [:> Graphics {:draw draw
-                   :rotation (* (get-in bullet [:rot]) 2 Math/PI)}]]))
+
+                   ;; :rotation (* (get-in bullet [:rot]) 2 Math/PI)
+
+                   ;; :rotation (* (get-in bullet [:rot]) 2 Math/PI)
+
+                   :rotation (- (* (get-in bullet [:rot]) 2 Math/PI)
+                                (/ Math/PI 2))
+
+
+                   }]]))
 
 

@@ -32,23 +32,25 @@
          }]
 
     (testing "Targets a ship which can be reached directly"
-      (let [initial-universe (-> test-universe
-                                 (assoc-in [:tribes :r :ships :r-1]
-                                           {:t 4000
-                                            :pos {:x 400.0 :y 0.0}
-                                            :rot 0.0
-                                            :target {:type :ship
-                                                     :tribe-id :y
-                                                     :id :y-1}
-                                           })
-                                 (assoc-in [:tribes :y :ships :y-1]
-                                           {:t 4000
-                                            :pos {:x 0.0 :y 0.0}
-                                            :rot 0.0
-                                            :vel 0.0
-                                            :target {:type :ship
-                                                     :tribe-id :r
-                                                     :id :r-1}}))
+      (let [initial-universe
+            (-> test-universe
+                (assoc-in [:tribes :r :ships :r-1]
+                          {:t 4000
+                           ;; :pos {:x 400.0 :y 0.0}
+                           :pos {:x 0.0 :y -400.0}
+                           :rot 0.0
+                           :target {:type :ship
+                                    :tribe-id :y
+                                    :id :y-1}
+                           })
+                (assoc-in [:tribes :y :ships :y-1]
+                          {:t 4000
+                           :pos {:x 0.0 :y 0.0}
+                           :rot 0.0
+                           :vel 0.0
+                           :target {:type :ship
+                                    :tribe-id :r
+                                    :id :r-1}}))
             t 4200
             universe (auto-navigation initial-universe t)]
         (is (= 1.0 (get-in universe [:tribes :y :ships :y-1 :thrust])))
@@ -58,9 +60,9 @@
 
 
     #_(testing "The target is the nearest resource, which is straight ahead, or base target if inv > 16"
-      (let [initial-universe
-            {:blocks {}
-             :grades {:y {:resources {:y-1 {:pos {:x 100.0 :y 0.0}
+        (let [initial-universe
+              {:blocks {}
+               :grades {:y {:resources {:y-1 {:pos {:x 100.0 :y 0.0}
                                             :amount 4}}}}
              :tribes {:y {:ships {:y-1 (ship {:x 0.0 :y -60.0})
                                   :y-2 (ship {:x 0.0 :y  0.0})

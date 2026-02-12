@@ -64,7 +64,7 @@
       (when (:auto-targetting? ship)
 
         (let [
-              ship-pos (get-in ship [:fs :pos])
+              ship-pos (get-in ship [:pos])
 
               primary-rt (get-in tribe [:production :primary])
               secondary-1-rt (get-in tribe [:production :secondary-1])
@@ -121,7 +121,7 @@
                          (let [score (score-resource grade-id res tribe)
                                ;; distance (distance-to-resource ship res)
                                distance (max 10.0
-                                             (shared/distance-from-to (get-in ship [:fs :pos])
+                                             (shared/distance-from-to (get-in ship [:pos])
                                                                       (:pos res)))]
                            [res-id grade-id score distance]))
                        resources-with-grades)
@@ -144,8 +144,8 @@
                         (let [score (score-ship other-tribe-id other-ship tribe)
                               ;; distance (distance-to-ship ship other-ship)
                               distance (max 10.0
-                                            (shared/distance-from-to (get-in ship [:fs :pos])
-                                                                     (get-in other-ship [:fs :pos])))]
+                                            (shared/distance-from-to (get-in ship [:pos])
+                                                                     (get-in other-ship [:pos])))]
                           [other-ship-id other-tribe-id score distance]))
                       ;; _ (println ship-scores-and-distances)
 

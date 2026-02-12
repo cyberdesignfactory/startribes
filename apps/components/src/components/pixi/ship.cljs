@@ -81,6 +81,7 @@
                    :y ship-y
 
                    ;; :rotation (* 0.5 Math/PI)
+                   :rotation (- (/ Math/PI 2))
 
                    }
      [:> Graphics {:draw draw

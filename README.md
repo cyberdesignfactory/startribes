@@ -39,7 +39,7 @@ TODO
 
 ## License
 
-Copyright © 2025 Robert J Symes
+Copyright © 2026 Robert J Symes
 
 Distributed under the Eclipse Public License, the same as Clojure.
 

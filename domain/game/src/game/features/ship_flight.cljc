@@ -10,16 +10,47 @@
 
   (let [
         ship-angle (* 2 Math/PI rot)
+        ;; projected-x (+ (:x pos)
+        ;;                (* (/ vel 100.0) ;; 3.6  ;; thrust
+        ;;                   0.36 ;; 0.001 ;; 0.36
+        ;;                   dt-max-250ms
+        ;;                   (Math/cos ship-angle))
+        ;;                (* side-vel ;; strafe
+        ;;                   -0.24
+        ;;                   dt-max-250ms
+        ;;                   (Math/sin ship-angle)))
+        ;; projected-y (+ (:y pos)
+        ;;                (* (/ vel 100.0) ;; 3.6  ;; thrust
+        ;;                   0.36 ;; 0.001 ;; 0.36
+        ;;                   dt-max-250ms
+        ;;                   (Math/sin ship-angle))
+        ;;                (* side-vel ;; strafe
+        ;;                   0.24
+        ;;                   dt-max-250ms
+        ;;                   (Math/cos ship-angle)))
+
+
+        ;; projected-x (+ (:x pos)
+        ;;                (* (/ vel 100.0) ;; 3.6  ;; thrust
+        ;;                   0.36 ;; 0.001 ;; 0.36
+        ;;                   dt-max-250ms
+        ;;                   (Math/sin ship-angle))
+        ;;                (* side-vel ;; strafe
+        ;;                   -0.24
+        ;;                   dt-max-250ms
+        ;;                   (Math/cos ship-angle)))
+        ;; projected-y (- (:y pos)
+        ;;                (* (/ vel 100.0) ;; 3.6  ;; thrust
+        ;;                   0.36 ;; 0.001 ;; 0.36
+        ;;                   dt-max-250ms
+        ;;                   (Math/cos ship-angle))
+        ;;                (* side-vel ;; strafe
+        ;;                   0.24
+        ;;                   dt-max-250ms
+        ;;                   (Math/sin ship-angle)))
+
+
         projected-x (+ (:x pos)
-                       (* (/ vel 100.0) ;; 3.6  ;; thrust
-                          0.36 ;; 0.001 ;; 0.36
-                          dt-max-250ms
-                          (Math/cos ship-angle))
-                       (* side-vel ;; strafe
-                          -0.24
-                          dt-max-250ms
-                          (Math/sin ship-angle)))
-        projected-y (+ (:y pos)
                        (* (/ vel 100.0) ;; 3.6  ;; thrust
                           0.36 ;; 0.001 ;; 0.36
                           dt-max-250ms
@@ -28,6 +59,18 @@
                           0.24
                           dt-max-250ms
                           (Math/cos ship-angle)))
+        projected-y (- (:y pos)
+                       (* (/ vel 100.0) ;; 3.6  ;; thrust
+                          0.36 ;; 0.001 ;; 0.36
+                          dt-max-250ms
+                          (Math/cos ship-angle))
+                       (* side-vel ;; strafe
+                          -0.24
+                          dt-max-250ms
+                          (Math/sin ship-angle)))
+
+
+
         projected-rot (mod (+ rot
                               (* (* ang-vel 10.0) ;; rudder
                                  0.00024

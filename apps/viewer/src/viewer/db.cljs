@@ -16,11 +16,13 @@
 
 (defn simple-ship []
   {:pos {:x 600 :y -900}
-   :rot 0.25
+   ;; :rot 0.25
+   :rot 0.0
 
    :weapons {:primary {:type :bullet}
              :secondary {:type :mine}}
 
+   :auto-targetting? true
    ;; :thrust 0.0
    ;; :rudder 0.0
    ;; :strafe 0.0
@@ -41,6 +43,8 @@
    :ui {
         :panel-id :intro
         }
+
+   :orientation {:alpha 0.7}
 
    :ship-thrust 0.0
    :ship-rudder 0.0

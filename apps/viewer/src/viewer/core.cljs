@@ -69,7 +69,8 @@
 
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
-  (re-frame/dispatch-sync [::events/initialize-orientation-listener])
+  ;; we commented this one out as part of the ios orientation attempt
+  #_(re-frame/dispatch-sync [::events/initialize-orientation-listener])
   (re-frame/dispatch-sync [::events/initialize-touch-listener])
   (re-frame/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (re-frame/dispatch-sync [::rp/add-keyboard-event-listener "keyup"])

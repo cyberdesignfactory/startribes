@@ -24,7 +24,7 @@
      [header/header {:style
                      {:position :absolute
                       :top 0
-                      :opacity 0.8
+                      :opacity 0.7
                       :width "100%"}
                      :time-left time-left}
 
@@ -44,14 +44,17 @@
        ;; :height 600
        :width width
        :height height
+       :header-margin 140
        ;; :camera {:pos {:x 0 :y 0}
        ;;          :scale 0.36}
        :camera {:pos {
                       :x (get-in world [:tribes :y :ships :y-1 :pos :x] 0.0)
                       :y (get-in world [:tribes :y :ships :y-1 :pos :y] 0.0)
                       }
-                :rot (- (get-in world [:tribes :y :ships :y-1 :rot] 0.0))
-                :scale scale}}]
+                :rot (get-in world [:tribes :y :ships :y-1 :rot] 0.0)
+                :scale scale}
+
+       }]
      ;; [:div
      ;;  [:h3 (str "screen-width: " @(re-frame/subscribe [::bp/screen-width]))]
      ;;  [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]

@@ -7,13 +7,19 @@
    [components.ui.header :as header]))
 
 (defn touch-intro []
-  [:div.card.bg-dark.mb-3
-   [:div.card-header.bg-dark
-    [:h4.text-light.pt-2 "Controls"]]
-   [:div.card-body.bg-dark
-    [:p.text-light "Tilt device to control thrust / rudder / strafe."]
-    [:p.text-light "Press right half of screen to fire primary weapon."]
-    [:p.text-light "Press left half of screen to fire secondary weapon."]]])
+  [:div
+   [:div.card.bg-dark.mb-3
+    [:div.card-header.bg-dark
+     [:h4.text-light.pt-2 "Controls"]]
+    [:div.card-body.bg-dark
+     [:p.text-light "Tilt device to control thrust / rudder."]
+     [:p.text-light "Press right half of screen to fire primary weapon."]
+     [:p.text-light "Press left half of screen to fire secondary weapon."]]]
+   [:button.btn.btn-secondary
+    ;; {:on-click #(re-frame/dispatch [::events/calibrate-clicked])}
+    #_{:on-click #(re-frame/dispatch-sync [::events/request-orientation-permission])}
+    {:on-click #(re-frame/dispatch-sync [::events/request-orientation-permission])}
+    "Begin Campaign"]])
 
 (defn keyboard-intro []
   (defn left-control-row [key action]
@@ -48,8 +54,10 @@
         [:p.text-light "Rotate Left"]]
        [right-control-row
         [:i.bi.bi-arrow-right-square.text-secondary]
-        [:p.text-light "Rotate Right"]]]]]]])
-
+        [:p.text-light "Rotate Right"]]]]]]
+   [:button.btn.btn-secondary
+    {:on-click #(re-frame/dispatch [::events/begin-campaign-clicked])}
+    "Begin Campaign"]])
 
 (defn intro-panel []
   #_(let [!portrait? (re-frame/subscribe [::bp/portrait?])])
@@ -59,7 +67,5 @@
     (if (.-matches (.matchMedia js/window "(any-pointer: coarse)"))
       [touch-intro]
       [keyboard-intro])
-    [:button.btn.btn-secondary
-     {:on-click #(re-frame/dispatch [::events/begin-campaign-clicked])}
-     "Begin Campaign"]]])
+    ]])
 

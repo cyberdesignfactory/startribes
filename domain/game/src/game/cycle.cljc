@@ -29,8 +29,9 @@
 
 
 (defn game-cycle [world t ship-thrust ship-rudder ship-strafe]
-  (let [thrust (get-in world [:tribes :y :ships :y-1 :thrust])
-        rudder (get-in world [:tribes :y :ships :y-1 :rudder])
+  (let [
+        ;; thrust (get-in world [:tribes :y :ships :y-1 :thrust])
+        ;; rudder (get-in world [:tribes :y :ships :y-1 :rudder])
         ;; delta (mod (* t 0.001) 1.0)
         ;; terrain (:terrain world)
         ]
@@ -50,7 +51,7 @@
         (bullet-expiration/bullet-expiration t)
         (energy-recharge/energy-recharge t)
         (destruction/destruction t)
-        #_(auto-targetting/auto-targetting t)
+        (auto-targetting/auto-targetting t)
         ;; need to make an exception for player ship
         ;; before we put this back in...
         (auto-navigation/auto-navigation t)

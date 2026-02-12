@@ -5,6 +5,7 @@
    [viewer.subs :as subs]
 
    [viewer.panels.intro :as panels.intro]
+   [viewer.panels.calibration :as panels.calibration]
    [viewer.panels.home :as panels.home]
    [viewer.panels.mission :as panels.mission]
    [viewer.panels.accomplished :as panels.accomplished]
@@ -17,6 +18,7 @@
       ;; need to dereference ratoms INSIDE the inner fn
       (case (:panel-id @!ui)
         :intro [panels.intro/intro-panel]
+        :calibration [panels.calibration/calibration-panel]
         :home [panels.home/home-panel]
         :mission [panels.mission/mission-panel]
         :accomplished [panels.accomplished/accomplished-panel]

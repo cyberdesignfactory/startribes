@@ -110,6 +110,7 @@
                {:thrust thrust
                 :rudder rudder
                 :fire-pressed? fire-pressed?})
+        (swap! !universe assoc-in [:tribes tribe-id :ships ship-id :nav-pos] nav-pos)
         (swap! !universe assoc-in [:tribes tribe-id :ships ship-id :thrust] thrust)
         (swap! !universe assoc-in [:tribes tribe-id :ships ship-id :rudder] rudder)
         (swap! !universe assoc-in [:tribes tribe-id :ships ship-id :fbs :primary] fire-pressed?)

@@ -13,7 +13,8 @@
   ;; 0.0
   (let [dx (- (:x target-pos) (:x pos))
         dy (- (:y target-pos) (:y pos))
-        angle (Math/atan2 dy dx)
+        ;; angle (Math/atan2 dy dx)
+        angle (Math/atan2 dx (- dy))
         rotation-to-position (/ angle (* 2 Math/PI))
         rotation-delta (- rotation-to-position rot)]
     (normalise-rotation rotation-delta)))
