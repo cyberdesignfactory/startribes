@@ -33,15 +33,8 @@
                                  (- box-h margin)
                                  8
                                  )
-               (.endFill g)
-
-               )
-
-        ]
+               (.endFill g))]
 
     [:> Container {:x box-x :y box-y}
-     [:> Graphics {:draw draw}]]
-
-    )
-  )
+     [:> Graphics {:draw draw}]]))
 

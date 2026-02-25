@@ -6,6 +6,7 @@
    [viewer.subs :as subs]
    ;; [viewer.panels.shared :as panels.shared]
    [components.ui.header :as header]
+   [components.ui.footer :as footer]
    ))
 
 (defn mission-panel []
@@ -17,6 +18,8 @@
         ship-rudder @(re-frame/subscribe [::subs/ship-rudder])
         ship-strafe @(re-frame/subscribe [::subs/ship-strafe])
         ship-fbs @(re-frame/subscribe [::subs/ship-fbs])
+        player-action-title @(re-frame/subscribe [::subs/player-action-title])
+        player-action-description @(re-frame/subscribe [::subs/player-action-description])
         width (- (.-innerWidth js/window) 0)  ;; was 16
         height (- (.-innerHeight js/window) 8)  ;; was 16 or 24
         scale 0.36]
@@ -26,14 +29,15 @@
                       :top 0
                       :opacity 0.7
                       :width "100%"}
-                     :time-left time-left}
+                     :time-left time-left}]
 
-      ;; ship-fbs
-      ]
-
-     ;; [:h2 (str "Url path: " (.-pathname (.-location js/window)))]
-     ;; [:h2 (str "Ship thrust: " @ship-thrust)]
-     ;; [:h2 (str "Ship rudder: " @ship-rudder)]
+     [footer/footer {:style
+                     {:position :absolute
+                      :bottom 0
+                      :opacity 0.7
+                      :width "100%"}
+                     :title player-action-title
+                     :description player-action-description}]
 
      [pixi-universe
       {:universe world

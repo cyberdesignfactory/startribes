@@ -42,9 +42,10 @@
         clipped-rotated-nav-pos
         (geometry/clip-pos-to-box rotated-nav-pos
                                   {:pos (-> ship-pos
-                                            (update :y #(+ % 2)))
+                                            (update :y #(+ % 8)))
                                    :size {:w (/ width (:scale camera))
-                                          :h (/ height (:scale camera))}})
+                                          :h (- (/ height (:scale camera))
+                                                16)}})
 
         nav-hint-pos
         (geometry/rotate-pos-around-pos clipped-rotated-nav-pos
@@ -71,26 +72,6 @@
                          (* (abs player-thrust) half-y)))))
 
 
-        ;; draw-thrust
-        ;; (fn [^js/PIXI.Graphics g]
-        ;;   (.clear g)
-        ;;   (.beginFill g 0xffaa33)
-        ;;   (doseq [x [20 400]]
-        ;;     (when (< player-thrust 0.0)
-        ;;       (.drawRect g
-        ;;                  x
-        ;;                  480
-        ;;                  20
-        ;;                  (* player-thrust -240.0)))
-        ;;     (when (> player-thrust 0.0)
-        ;;       (.drawRect g x
-        ;;                  (- 480 (* (abs player-thrust) 240.0))
-        ;;                  20
-        ;;                  (* (abs player-thrust) 240.0)))))
-
-        ;; x-middle 220
-        ;; rudder-y 160
-        ;; half-w 200.0
         x-middle (/ width 2)
         rudder-y (+ header-margin 20)
         half-w (- (/ width 2) 20)
@@ -111,23 +92,6 @@
                                    (* player-rudder half-w)
                                    20)))
 
-        ;; draw-rudder (fn [^js/PIXI.Graphics g]
-        ;;               (.clear g)
-        ;;               (.beginFill g 0xffaa33)
-        ;;               (when (< player-rudder 0.0)
-        ;;                 (.drawRect g
-        ;;                            (- 220
-        ;;                               (* player-rudder -200.0))
-        ;;                            160
-        ;;                            (* player-rudder -200.0)
-        ;;                            20))
-        ;;               (when (> player-rudder 0.0)
-        ;;                 (.drawRect g
-        ;;                            220
-        ;;                            160
-        ;;                            (* player-rudder 200.0)
-        ;;                            20)))
-
         strafe-y (- height 40)
         draw-strafe (fn [^js/PIXI.Graphics g]
                       (.clear g)
@@ -144,35 +108,14 @@
                                    x-middle
                                    strafe-y
                                    (* player-strafe half-w)
-                                   20)))
-
-        ;; draw-strafe (fn [^js/PIXI.Graphics g]
-        ;;               (.clear g)
-        ;;               (.beginFill g 0xffaa33)
-        ;;               (when (< player-strafe 0.0)
-        ;;                 (.drawRect g
-        ;;                            (- 220
-        ;;                               (* player-strafe -200.0))
-        ;;                            720
-        ;;                            (* player-strafe -200.0)
-        ;;                            20))
-        ;;               (when (> player-strafe 0.0)
-        ;;                 (.drawRect g
-        ;;                            220
-        ;;                            720
-        ;;                            (* player-strafe 200.0)
-        ;;                            20)))
-
-        ]
+                                   20)))]
 
     [:> Stage {:width width :height height
-
                :style {
                        "-webkit-user-select" "none"
                        "user-select" "none"
                        "-webkit-touch-callout" "none"
                        }
-               
                :options {:background-color 0x000033}}
 
 
@@ -198,24 +141,15 @@
 
      [:> Container {:x (/ width 2)
                     :y (/ height 2)
-
                     :rotation
                     (- (* 2
                           (.-PI js/Math)
-                          (get-in camera [:rot] 0.0))
-                       #_(/ (.-PI js/Math) 2))
-
+                          (get-in camera [:rot] 0.0)))
                     :scale camera-scale}
       [:> Container {:x (- (* (get-in camera [:pos :x] 0)))
                      :y (- (* (get-in camera [:pos :y] 0)))}
 
        [pixi-terrain (:terrain universe)]
-
-       #_(when nav-pos
-         [pixi-nav-hint {:pos nav-hint-pos
-                         :rot ship-rot
-                         :colour 0xffaa33
-                         :inner-colour 0xcc7700}])
 
        (for [[id nav-point] (:nav-points universe)]
          [pixi-nav-point (-> nav-point
@@ -259,16 +193,14 @@
                             (assoc :colour
                                    (get-in universe [:grades grade-id :colour])))])
 
+       (when nav-pos
+         [pixi-nav-hint {:pos nav-hint-pos
+                         :rot ship-rot
+                         ;; :colour 0xffaa33
+                         :colour 0xffffff
+                         ;; :inner-colour 0xcc7700
+                         :inner-colour 0xcccccc}])
 
+       ]]]))
 
-       ]
-
-      #_[:> Text {:text (str (get-in universe [:tribes :y :ships :y-1 :target]))
-                :style {:fill 0xff7777
-                        :stroke 0xffffff}}]
-
-      #_[:> Text {:text (str nav-hint-pos-vector)
-                  :style {:fill 0xff7777
-                          :stroke 0xffffff}}]]
-     ]))
 

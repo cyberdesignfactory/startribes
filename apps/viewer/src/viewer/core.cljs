@@ -6,9 +6,7 @@
    [breaking-point.core :as bp]
    [viewer.events :as events]
    [viewer.views :as views]
-   [viewer.config :as config]
-   ))
-
+   [viewer.config :as config]))
 
 (defn dev-setup []
   (when config/debug?
@@ -17,7 +15,6 @@
 ;; key codes: https://github.com/google/closure-library/blob/master/closure/goog/events/keycodes.js#L27
 
 (defn dispatch-keyboard-rules []
-
   (let [w {:keyCode 87}
         s {:keyCode 83}
         left {:keyCode 37}
@@ -69,8 +66,6 @@
 
 (defn init []
   (re-frame/dispatch-sync [::events/initialize-db])
-  ;; we commented this one out as part of the ios orientation attempt
-  #_(re-frame/dispatch-sync [::events/initialize-orientation-listener])
   (re-frame/dispatch-sync [::events/initialize-touch-listener])
   (re-frame/dispatch-sync [::rp/add-keyboard-event-listener "keydown"])
   (re-frame/dispatch-sync [::rp/add-keyboard-event-listener "keyup"])
@@ -84,20 +79,12 @@
                                           :large-monitor]
                             :debounce-ms 166}])
   (dispatch-keyboard-rules)
-  ;; (re-frame/dispatch-sync [::events/set-world-id (.-pathname (.-location js/window))])
   (dev-setup)
   (mount-root)
-
-  ;; (js/alert (if (.-matches (.matchMedia js/window "(any-pointer: coarse)")) "YES" "NO"))
 
   (js/setInterval
    (fn []
      (let [t (.getTime (js/Date.))]
-
-       (re-frame/dispatch [::events/game-cycle t])
-
-       ))
-   10)
-
-  )
+       (re-frame/dispatch [::events/game-cycle t])))
+   10))
 

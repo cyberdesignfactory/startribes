@@ -19,38 +19,12 @@
 
                (.drawCircle g 0 0 circle-radius)
 
-               ;; (.drawRoundedRect g
-               ;;                   (- (/ circle-w 2))
-               ;;                   (- (/ circle-h 2))
-               ;;                   circle-w
-               ;;                   circle-h
-               ;;                   8
-               ;;                   )
-
                (.endFill g)
                (.beginFill g circle-inner-color)
                (.drawCircle g 0 0 (- circle-radius margin))
 
-               ;; (.drawRoundedRect g
-               ;;                   (- (/ (- circle-w margin) 2))
-               ;;                   (- (/ (- circle-h margin) 2))
-               ;;                   (- circle-w margin)
-               ;;                   (- circle-h margin)
-               ;;                   8
-               ;;                   )
-
-               (.endFill g)
-
-               )
-
-        ]
+               (.endFill g))]
 
     [:> Container {:x circle-x :y circle-y}
-     [:> Graphics {:draw draw}]]
-
-    )
-
-  )
-
-
+     [:> Graphics {:draw draw}]]))
 

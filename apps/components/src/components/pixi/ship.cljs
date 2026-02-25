@@ -2,14 +2,10 @@
   (:require
    ["@pixi/events"]
    ["@pixi/react" :refer [Stage Container Sprite Text Graphics]]
-   [components.pixi.helpers :refer [tribe-color resource-color tribe-resource-types]]))
+   [components.pixi.helpers :refer [resource-color]]))
 
 (defn pixi-ship [ship on-select]
-  (let [;; tribe-id (:tribe-id ship)
-        ;; ship-color (tribe-color tribe-id)
-        ship-color (:colour ship)
-        ;; ship-x (get-in ship [:fs :pos :x])
-        ;; ship-y (get-in ship [:fs :pos :y])
+  (let [ship-color (:colour ship)
         ship-x (get-in ship [:pos :x])
         ship-y (get-in ship [:pos :y])
         draw (fn [^js/PIXI.Graphics g]
@@ -53,10 +49,7 @@
                          (.drawRect g -62 -24 24 16)
                          (.beginFill g 0xaa3333)
                          (.drawRect g -62 -24 (* (:thrust ship) 24) 16)
-                         (.endFill g)
-
-                         )
-
+                         (.endFill g))
 
         draw-energy (fn [^js/PIXI.Graphics g]
                       (.clear g)
@@ -65,46 +58,24 @@
                         (.drawRect g -32 72 64 8)
                         (.beginFill g 0x448844)
                         (.drawRect g -32 72 (* (:energy ship) 64) 8)
-                        (.endFill g))
-                      #_(when (< (get ship :energy 1.0) 1.0)
-                        (.lineStyle g 2 0x244824)
-                        (.drawRect g -32 48 64 8)
-                        (.beginFill g 0x448844)
-                        (.drawRect g -32 48 (* (:energy ship) 64) 8)
-                        (.endFill g))
-
-                      )
-
-        ]
+                        (.endFill g)))]
 
     [:> Container {:x ship-x
                    :y ship-y
-
-                   ;; :rotation (* 0.5 Math/PI)
-                   :rotation (- (/ Math/PI 2))
-
-                   }
+                   :rotation (- (/ Math/PI 2))}
      [:> Graphics {:draw draw
-                   ;; :rotation (* (get-in ship [:fs :rot]) 2 Math/PI)
                    :rotation (* (get-in ship [:rot]) 2 Math/PI)
-
                    :pointerdown #(on-select)
                    :interactive true
                    ;; :hit-area (js/PIXI.Rectangle. 0 0 50 50)
-
                    }]
      [:> Graphics {:draw draw-energy
-
                    :rotation (+ (/ Math/PI 2)  (* (get-in ship [:rot]) 2 Math/PI))
-
                    :alpha 0.6}]
 
      #_[:> Graphics {:draw draw-thrusters
-
                    :rotation (+ #_(/ Math/PI 2)  (* (get-in ship [:rot]) 2 Math/PI))
-
                    ;; :alpha 0.6
-
                    }]]))
 
 

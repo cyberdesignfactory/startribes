@@ -12,12 +12,11 @@
     [:div.card-header.bg-dark
      [:h4.text-light.pt-2 "Controls"]]
     [:div.card-body.bg-dark
-     [:p.text-light "Tilt device to control thrust / rudder."]
+     [:p.text-light "Tilt device to control thrust / rudder / strafe."]
      [:p.text-light "Press right half of screen to fire primary weapon."]
      [:p.text-light "Press left half of screen to fire secondary weapon."]]]
    [:button.btn.btn-secondary
     ;; {:on-click #(re-frame/dispatch [::events/calibrate-clicked])}
-    #_{:on-click #(re-frame/dispatch-sync [::events/request-orientation-permission])}
     {:on-click #(re-frame/dispatch-sync [::events/request-orientation-permission])}
     "Begin Campaign"]])
 

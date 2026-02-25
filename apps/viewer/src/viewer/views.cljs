@@ -3,14 +3,12 @@
    [re-frame.core :as re-frame]
    [viewer.events :as events]
    [viewer.subs :as subs]
-
    [viewer.panels.intro :as panels.intro]
    [viewer.panels.calibration :as panels.calibration]
    [viewer.panels.home :as panels.home]
    [viewer.panels.mission :as panels.mission]
    [viewer.panels.accomplished :as panels.accomplished]
-   [viewer.panels.failed :as panels.failed]
-   ))
+   [viewer.panels.failed :as panels.failed]))
 
 (defn main-panel []
   (let [!ui (re-frame/subscribe [::subs/ui])]

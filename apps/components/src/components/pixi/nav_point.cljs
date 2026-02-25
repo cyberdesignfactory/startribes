@@ -15,17 +15,9 @@
          draw (fn [^js/PIXI.Graphics g]
                 (.clear g)
                 (.beginFill g nav-point-color)
-
                 (.drawCircle g 0 0 8)
-
-                #_(.endFill g))
-
-         ]
+                #_(.endFill g))]
 
      [:> Container {:x nav-point-x :y nav-point-y}
-      [:> Graphics {:draw draw}]]
-
-     )]
-
-  )
+      [:> Graphics {:draw draw}]])])
 

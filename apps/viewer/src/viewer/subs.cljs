@@ -35,21 +35,12 @@
 (re-frame/reg-sub
  ::mission
  (fn [db]
-   ;; (:mission db)
-   (get-in db [:missions (:mission-id db)])
-
-   ))
+   (get-in db [:missions (:mission-id db)])))
 
 (re-frame/reg-sub
  ::world
  (fn [db]
    (:world db)))
-
-
-#_(re-frame/reg-sub
- ::re-pressed-example
- (fn [db _]
-   (:re-pressed-example db)))
 
 (re-frame/reg-sub
  ::ship-thrust
@@ -66,15 +57,17 @@
  (fn [db _]
    (:ship-strafe db)))
 
-
 (re-frame/reg-sub
  ::ship-fbs
  (fn [db _]
    (:ship-fbs db)))
 
-#_(re-frame/reg-sub
- ::world-id
- (fn [db]
-   (:world-id db)))
+(re-frame/reg-sub
+ ::player-action-title
+ (fn [db _]
+   (get-in db [:world :tribes :y :ships :y-1 :action-title])))
 
-
+(re-frame/reg-sub
+ ::player-action-description
+ (fn [db _]
+   (get-in db [:world :tribes :y :ships :y-1 :action-description])))
