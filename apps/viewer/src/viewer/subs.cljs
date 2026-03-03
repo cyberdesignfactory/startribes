@@ -8,6 +8,11 @@
    (:name db)))
 
 (re-frame/reg-sub
+ ::calibration
+ (fn [db]
+   (:calibration db)))
+
+(re-frame/reg-sub
  ::orientation
  (fn [db]
    (:orientation db)))
@@ -18,9 +23,21 @@
    (:ui db)))
 
 (re-frame/reg-sub
+ ::campaign-details
+ (fn [db]
+   {
+    :title
+    (get-in db [:campaigns (:campaign-id db) :title])
+    :previous-campaign-id
+    (get-in db [:campaigns (:campaign-id db) :previous-campaign-id])
+    :next-campaign-id
+    (get-in db [:campaigns (:campaign-id db) :next-campaign-id])
+    }))
+
+(re-frame/reg-sub
  ::missions
  (fn [db]
-   (:missions db)))
+   (get-in db [:campaigns (:campaign-id db) :missions])))
 
 (re-frame/reg-sub
  ::time-left
@@ -35,7 +52,8 @@
 (re-frame/reg-sub
  ::mission
  (fn [db]
-   (get-in db [:missions (:mission-id db)])))
+   (get-in db [:campaigns (:campaign-id db)
+               :missions (:mission-id db)])))
 
 (re-frame/reg-sub
  ::world

@@ -3,7 +3,6 @@
    [re-frame.core :as re-frame]
    [re-pressed.core :as rp]
    [viewer.db :as db]
-   ;; [tribes.simple :as simple]
    [game.cycle :as cycle]
    [worlds.rob :as rob]
    [worlds.circles :as circles]
@@ -21,36 +20,10 @@
   (max -1.0 (min 1.0 amount)))
 
 (defn orientation-changed [alpha beta gamma]
-
-  ;; thrust = (40 - beta) / 20
-  ;; rudder = (90 - alpha) / 30
-  ;; strafe = (5 + gamma) / 15
-
-  (let [controls {:thrust (limit (/ (- 50.0 beta) 16.0))
-
-                  ;; :rudder (limit (/ (- 90.0 alpha) 10.0))
-                  ;; :strafe (limit (/ (+ 5.0 gamma) 30.0))
-
-                  :rudder (limit (/ (+ 5.0 gamma) 30.0))
-                  :strafe 0.0 ;; (limit (/ (- 90.0 alpha) 10.0))
-                  }]
-    (re-frame/dispatch [::set-controls controls])
-    (re-frame/dispatch [::set-orientation {:beta beta
-                                           :alpha alpha
-                                           :gamma gamma}])))
-(re-frame/reg-event-db
- ::initialize-orientation-listener
- (fn [db _]
-   (.addEventListener js/window "deviceorientation"
-                      (fn [e]
-                        (when (.-alpha e)
-                          (orientation-changed (.-alpha e)
-                                               (.-beta e)
-                                               (.-gamma e)))))
-   (-> db
-       (assoc :ship-thrust false)
-       (assoc :ship-rudder false)
-       (assoc :ship-strafe false))))
+  (re-frame/dispatch [::set-orientation
+                      {:beta beta
+                       :alpha alpha
+                       :gamma gamma}]))
 
 (re-frame/reg-event-db
  ::initialize-touch-listener
@@ -71,14 +44,6 @@
                             (re-frame/dispatch [::update-fbs :secondary false])))))))
 
 (re-frame/reg-event-db
- ::set-controls
- (fn [db [_ controls]]
-   (-> db
-       (assoc :ship-thrust (:thrust controls))
-       (assoc :ship-rudder (:rudder controls))
-       (assoc :ship-strafe (:strafe controls)))))
-
-(re-frame/reg-event-db
  ::update-fbs
  (fn [db [_ fb down?]]
    (-> db
@@ -87,9 +52,57 @@
 (re-frame/reg-event-db
  ::set-orientation
  (fn [db [_ orientation]]
-   (-> db
-       (assoc :orientation orientation)
-       )))
+   (let [calibrating? (= :calibration (get-in db [:ui :panel-id]))
+         min-alpha (get-in db [:calibration :min-alpha])
+         max-alpha (get-in db [:calibration :max-alpha])
+         min-beta (get-in db [:calibration :min-beta])
+         max-beta (get-in db [:calibration :max-beta])
+         min-gamma (get-in db [:calibration :min-gamma])
+         max-gamma (get-in db [:calibration :max-gamma])
+
+         controls
+         {:thrust (limit
+                   (- 1.0
+                      (* 2.0 (/ (- (:beta orientation) min-beta)
+                                (- max-beta min-beta)))))
+          :rudder (limit
+                   (+ -1.0
+                      (* 2.0 (/ (- (:gamma orientation) min-gamma)
+                                (- max-gamma min-gamma)))))}]
+
+     (if calibrating?
+       (let [min-alpha (min (get-in db [:calibration :min-alpha])
+                            (:alpha orientation))
+             max-alpha (max (get-in db [:calibration :max-alpha])
+                            (:alpha orientation))
+             min-beta (min (get-in db [:calibration :min-beta])
+                           (:beta orientation))
+             max-beta (max (get-in db [:calibration :max-beta])
+                           (:beta orientation))
+             min-gamma (min (get-in db [:calibration :min-gamma])
+                            (:gamma orientation))
+             max-gamma (max (get-in db [:calibration :max-gamma])
+                            (:gamma orientation))]
+
+         (-> db
+             (assoc-in [:calibration :min-alpha] min-alpha)
+             (assoc-in [:calibration :max-alpha] max-alpha)
+             (assoc-in [:calibration :min-beta] min-beta)
+             (assoc-in [:calibration :max-beta] max-beta)
+             (assoc-in [:calibration :min-gamma] min-gamma)
+             (assoc-in [:calibration :max-gamma] max-gamma)
+             (assoc :orientation orientation)
+             (assoc :ship-thrust (:thrust controls))
+             (assoc :ship-rudder (:rudder controls))
+             (assoc :ship-strafe (:strafe controls))
+             ))
+
+       (-> db
+           (assoc :orientation orientation)
+           (assoc :ship-thrust (:thrust controls))
+           (assoc :ship-rudder (:rudder controls))
+           (assoc :ship-strafe (:strafe controls))
+           )))))
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -138,7 +151,13 @@
                                  :h 80}}])))})
 
        (assoc-in [:ui :panel-id] :calibration)
-       )))
+       (assoc :calibration
+              {:min-alpha (- (get-in db [:orientation :alpha]) 16)
+               :max-alpha (+ (get-in db [:orientation :alpha]) 16)
+               :min-beta (- (get-in db [:orientation :beta]) 16)
+               :max-beta (+ (get-in db [:orientation :beta]) 16)
+               :min-gamma (- (get-in db [:orientation :gamma]) 16)
+               :max-gamma (+ (get-in db [:orientation :gamma]) 16)}))))
 
 (re-frame/reg-event-fx
  ::request-orientation-permission
@@ -162,9 +181,7 @@
                         (orientation-changed (.-alpha event)
                                              (.-beta event)
                                              (.-gamma event))))
-   #_{:dispatch [::calibrate-clicked]}
-   {:dispatch [::begin-campaign-clicked]}
-   ))
+   {:dispatch [::begin-campaign-clicked]}))
 
 (re-frame/reg-event-db
  ::permission-denied
@@ -179,6 +196,12 @@
        (assoc-in [:ui :panel-id] :home))))
 
 (re-frame/reg-event-db
+ ::campaign-clicked
+ (fn [db [_ id]]
+   (-> db
+       (assoc :campaign-id id))))
+
+(re-frame/reg-event-db
  ::mission-selected
  (fn [db [_ id]]
    (let [t (.getTime (js/Date.))]
@@ -186,35 +209,32 @@
          (assoc-in [:ui :panel-id] :mission)
          ;; set mission up here
          (assoc :mission-id id)
-
-         (assoc :time-left (get-in db [:missions id :time-limit]))
-
+         (assoc :time-left (get-in db [:campaigns (:campaign-id db)
+                                       :missions id :time-limit]))
          ;; reset player ship fire buttons
          (assoc-in [:ship-fbs :primary] false)
          (assoc-in [:ship-fbs :secondary] false)
-         ;; these two lines probably aren't needed
-         (assoc-in [:world :tribes :y :ships :y-1 :fbs :primary] false)
-         (assoc-in [:world :tribes :y :ships :y-1 :fbs :secondary] false)
 
-         (assoc :world (get-in db [:missions id :initial-world]))
-
-         ;; and start game cycle presumably
-         ))))
+         (assoc :world (get-in db [:campaigns (:campaign-id db)
+                                   :missions id :initial-world]))))))
 
 (re-frame/reg-event-db
  ::mission-accomplished
  (fn [db [_ id]]
-   (let [time-limit (get-in db [:missions id :time-limit])
+   (let [time-limit (get-in db [:campaigns (:campaign-id db)
+                                :missions id :time-limit])
          time-taken (- time-limit (:time-left db))]
      (-> db
          (assoc-in [:ui :panel-id] :accomplished)
          ;; tear world down
          (dissoc :world)
-         ;; and stop game cycle presumably
-         ;; and update progress
-         (assoc-in [:missions id :accomplished?] true)
-         (assoc-in [:missions id :most-recent-time] time-taken)
-         (update-in [:missions id :best-time]
+         ;; update progress
+         (assoc-in [:campaigns (:campaign-id db)
+                    :missions id :accomplished?] true)
+         (assoc-in [:campaigns (:campaign-id db)
+                    :missions id :most-recent-time] time-taken)
+         (update-in [:campaigns (:campaign-id db)
+                     :missions id :best-time]
                     (fn [current-best-time]
                       (if (or
                            (not current-best-time)
@@ -228,11 +248,7 @@
  (fn [db [_ id]]
    (-> db
        (assoc-in [:ui :panel-id] :failed)
-       ;; tear mission down here
-       ;; and world
-       (dissoc :world)
-       ;; and stop game cycle presumably
-       )))
+       (dissoc :world))))
 
 (re-frame/reg-event-fx
  ::game-continued
@@ -262,10 +278,13 @@
    (if (:world db)
      (let [mission-id (:mission-id db)]
        (when mission-id
-         (when ((get-in db [:missions mission-id :success-fn]) (:world db))
+         (when ((get-in db [:campaigns (:campaign-id db)
+                            :missions mission-id :success-fn]) (:world db))
            (re-frame/dispatch [::mission-accomplished mission-id]))
-         (when (and (fn? (get-in db [:missions mission-id :failure-fn]))
-                    ((get-in db [:missions mission-id :failure-fn]) (:world db)))
+         (when (and (fn? (get-in db [:campaigns (:campaign-id db)
+                                     :missions mission-id :failure-fn]))
+                    ((get-in db [:campaigns (:campaign-id db)
+                                 :missions mission-id :failure-fn]) (:world db)))
            (re-frame/dispatch [::mission-failed mission-id]))
          (when-not (get-in db [:world :tribes :y :ships :y-1])
            (re-frame/dispatch [::mission-failed mission-id]))

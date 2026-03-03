@@ -14,6 +14,7 @@
         ship-rudder @(re-frame/subscribe [::subs/ship-rudder])
         ship-strafe @(re-frame/subscribe [::subs/ship-strafe])
         ship-fbs @(re-frame/subscribe [::subs/ship-fbs])
+        calibration @(re-frame/subscribe [::subs/calibration])
         orientation @(re-frame/subscribe [::subs/orientation])
         scale 0.36
         ]
@@ -21,7 +22,9 @@
      [:div.card-header.bg-dark
       [:h4.text-light.pt-2 "Calibrate Controls"]]
      [:div.card-body.bg-dark
-      [:p.text-light "Tilt device forwards and backwards for max / min thrust."]
+      [:p.text-light "Tilt device:"]
+      [:p.text-light "Forwards and backwards for max / min thrust."]
+      [:p.text-light "Left and right for max / min rudder."]
 
       [pixi-universe
        {:width 360
@@ -48,6 +51,18 @@
         }]
 
       #_[:div
+       [:pre.text-light (str (Math/round (:min-alpha calibration))
+                             " "
+                             (Math/round (:max-alpha calibration)))]]
+      #_[:div
+       [:pre.text-light (str (Math/round (:min-beta calibration))
+                             " "
+                             (Math/round (:max-beta calibration)))]]
+      #_[:div
+       [:pre.text-light (str (Math/round (:min-gamma calibration))
+                             " "
+                             (Math/round (:max-gamma calibration)))]]
+      #_[:div
        [:pre.text-light (str (Math/round (:alpha orientation)))]]
       #_[:div
        [:pre.text-light (str (Math/round (:beta orientation)))]]
@@ -56,7 +71,7 @@
 
 
       [:div.mt-2
-       [:button.btn.btn-secondary
+       [:button.btn.btn-link.text-light
         {:on-click #(re-frame/dispatch [::events/calibrate-clicked])}
         "Restart Calibration"]]
       ]]))
@@ -75,4 +90,6 @@
     [:div
      [:button.btn.btn-secondary
       {:on-click #(re-frame/dispatch [::events/begin-campaign-clicked])}
-      "Begin Campaign"]]]])
+      #_"Begin Campaign"
+      "Done"
+      ]]]])

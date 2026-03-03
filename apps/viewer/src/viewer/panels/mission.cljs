@@ -4,15 +4,11 @@
    [components.pixi.universe :refer [pixi-universe]]
    [viewer.events :as events]
    [viewer.subs :as subs]
-   ;; [viewer.panels.shared :as panels.shared]
    [components.ui.header :as header]
-   [components.ui.footer :as footer]
-   ))
+   [components.ui.footer :as footer]))
 
 (defn mission-panel []
-  (let [
-        ;; world-id (re-frame/subscribe [::subs/world-id])
-        world @(re-frame/subscribe [::subs/world])
+  (let [world @(re-frame/subscribe [::subs/world])
         time-left @(re-frame/subscribe [::subs/time-left])
         ship-thrust @(re-frame/subscribe [::subs/ship-thrust])
         ship-rudder @(re-frame/subscribe [::subs/ship-rudder])
@@ -27,14 +23,14 @@
      [header/header {:style
                      {:position :absolute
                       :top 0
-                      :opacity 0.7
+                      :opacity 0.6
                       :width "100%"}
                      :time-left time-left}]
 
      [footer/footer {:style
                      {:position :absolute
                       :bottom 0
-                      :opacity 0.7
+                      :opacity 0.6
                       :width "100%"}
                      :title player-action-title
                      :description player-action-description}]
@@ -44,8 +40,6 @@
        :player-thrust ship-thrust
        :player-rudder ship-rudder
        :player-strafe ship-strafe
-       ;; :width 600
-       ;; :height 600
        :width width
        :height height
        :header-margin 140
@@ -56,10 +50,4 @@
                       :y (get-in world [:tribes :y :ships :y-1 :pos :y] 0.0)
                       }
                 :rot (get-in world [:tribes :y :ships :y-1 :rot] 0.0)
-                :scale scale}
-
-       }]
-     ;; [:div
-     ;;  [:h3 (str "screen-width: " @(re-frame/subscribe [::bp/screen-width]))]
-     ;;  [:h3 (str "screen: " @(re-frame/subscribe [::bp/screen]))]]
-     ]))
+                :scale scale}}]]))

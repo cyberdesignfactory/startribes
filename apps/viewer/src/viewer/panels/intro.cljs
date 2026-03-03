@@ -16,9 +16,7 @@
      [:p.text-light "Press right half of screen to fire primary weapon."]
      [:p.text-light "Press left half of screen to fire secondary weapon."]]]
    [:button.btn.btn-secondary
-    ;; {:on-click #(re-frame/dispatch [::events/calibrate-clicked])}
-    {:on-click #(re-frame/dispatch-sync [::events/request-orientation-permission])}
-    "Begin Campaign"]])
+    {:on-click #(re-frame/dispatch-sync [::events/request-orientation-permission])} "Begin Campaign"]])
 
 (defn keyboard-intro []
   (defn left-control-row [key action]
