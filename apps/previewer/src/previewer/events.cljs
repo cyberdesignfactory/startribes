@@ -2,9 +2,9 @@
   (:require
    [re-frame.core :as re-frame]
    [game.cycle :as cycle]
-   [terrains.circles :as circles]
-   [terrains.boxes :as boxes]
-   [terrains.experimental :as experimental]
+   [worlds.circles :as circles]
+   [worlds.boxes :as boxes]
+   ;; [worlds.experimental :as experimental]
    [previewer.db :as db]
    ))
 
@@ -46,7 +46,7 @@
             (case (get-in new-db [:ui :terrain-id])
               :circles (circles/circles-terrain 0)
               :boxes (boxes/boxes-terrain 0)
-              :experimental (experimental/experimental-terrain 0)
+;;              :experimental (experimental/experimental-terrain 0)
               )}
 
            :tribes

@@ -1,6 +1,7 @@
 (ns previewer.db
-  (:require [terrains.experimental :as experimental]
-            [tribes.simple :as simple]))
+  (:require [worlds.boxes :as boxes]
+           ;; [tribes.simple :as simple]
+            ))
 
 (def default-db
   {:name "re-frame"
@@ -33,8 +34,10 @@
    ;;                     {:flat {:title "Flat"                ;; v== default values
    ;;                             :world {:terrain {:doors {:flat {}}}}}}}}}}
 
-   :world {:terrain (experimental/experimental-terrain 0)
-           :tribes (simple/simple-tribes)}
+   ;; :world {:terrain (experimental/experimental-terrain 0)
+   ;;         :tribes (simple/simple-tribes)}
+
+   :world (boxes/simple-boxes-world {:t 0})
 
    })
 

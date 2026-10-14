@@ -21,8 +21,8 @@
   components/components {:local/root "../components"}
   ;; domain/domain {:local/root "../../domain"}
   domain/projection {:local/root "../../domain/projection"}
-  domain/terrains {:local/root "../../domain/terrains"}
-  domain/tribes {:local/root "../../domain/tribes"}
+  ;; domain/terrains {:local/root "../../domain/terrains"}
+  ;; domain/tribes {:local/root "../../domain/tribes"}
   domain/worlds {:local/root "../../domain/worlds"}
   domain/game {:local/root "../../domain/game"}
 
