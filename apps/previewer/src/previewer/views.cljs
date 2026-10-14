@@ -8,6 +8,7 @@
    [worlds.circles :as circles]
    [worlds.boxes :as boxes]
    [worlds.shared :as shared]
+   [worlds.pieces.door :as door]
    [previewer.subs :as subs]
    [previewer.events :as events]
    [previewer.previews.ships.yellow-fighter :as yellow-fighter]
@@ -28,12 +29,18 @@
             :top "96px"}}
    [:div.text-start.mx-2.p-2
     [:div.list-group
+
      [:div.list-group-item.bg-primary-subtle
       [:p "Worlds"
        [:div.list-group
         [preview-item "Circles" [:worlds :circles]]
         [preview-item "Boxes" [:worlds :boxes]]
         [preview-item "Rob" [:worlds :rob]]]]]
+
+     [:div.list-group-item.bg-primary-subtle
+      [:p "Pieces"
+       [:div.list-group
+        [preview-item "Door" [:pieces :door]]]]]
 
      [:div.list-group-item.bg-primary-subtle
       [:p "Ships"
@@ -86,6 +93,23 @@
           :camera {:pos {:x 0 :y 240.0}
                    :scale 0.24}}]
 
+        ;; -----------------------------
+
+        [:pieces :door]
+        [pixi.universe/pixi-universe
+         {:universe {
+                     :t 0
+                     ;; :terrain (boxes/boxes-terrain {:t 0})
+                     :terrain (door/door-piece)
+
+                     }
+          :width width
+          :height height
+          :camera {:pos {:x 0 :y 240.0}
+                   :scale 0.24}}]
+
+        ;; -----------------------------
+
         [:ships :fighter]
         [pixi.universe/pixi-universe
          {:universe {:t 0
@@ -104,182 +128,7 @@
           :camera {:pos {:x 0 :y 240.0}
                    :scale 0.24}}]
 
-
         [:div]
 
-        )
-
-
-
-
-
-      #_[pixi.universe/pixi-universe
-       {
-        ;; :universe (yellow-fighter/yellow-fighter-preview)
-        :universe (rob/simple-rob-world {:t 0})
-        ;; :universe (circles/simple-circles-world {:t 0})
-        ;; :universe (boxes/simple-boxes-world {:t 0})
-        ;; universe
-        #_{:terrain
-
-         [:group {}
-          (into [:group {}]
-                (for [n (range 6)]
-                  [:group {:pos {:x 0 :y (* n 200)}}
-                   [:box {:pos {:x -200 :y 0}
-                          :size {:w 120 :h 120}}]
-                   [:box {:pos {:x  200 :y 0}
-                          :size {:h 180 :w 120}}]]))]
-         }
-
-        ;; :width 600
-        ;; :height 600
-        :width width
-        :height height
-        ;; :camera {:scale 1.0}
-        :camera {:pos {:x 0.0
-                       :y 240.0}
-                 :rot 0.25
-                 :scale 0.24}}]]]
-
-    #_[:div
-     [header/header {:position :absolute
-                     :top 0
-                     :opacity 0.8
-                     :width "100%"}]
-     [:div {:style {:margin-top 96}}
-      [menu/menu {:items {:worlds {:title "Worlds"}
-                          :terrain {:title "Terrain"}
-                          :tribe {:title "Tribe"}
-                          :grade {:title "Grade"}
-                          ;; :doors {:title "Doors"}
-                          ;; :tribes {:title "Tribes"}
-                          }
-                  :selected-id (:type-id @!ui)
-                  :on-selected (fn [id] (re-frame/dispatch [::events/update-ui [:type-id] id]))}]]
-
-     (case (:type-id @!ui)
-
-       :worlds
-       [:div
-
-        ]
-
-       :terrain
-       [:div
-        [menu/menu {:items {:doors {:title "Doors"}
-                            :bridges {:title "Bridges"}
-                            :roads {:title "Roads"}}
-
-                    }]
-
-
-        #_[menu/menu {:items {:circles {:title "Circles"}
-                            :boxes {:title "Boxes"}
-                            :experimental {:title "Experimental"}}
-                    :selected-id (:terrain-id @!ui)
-                    :on-selected (fn [id] (re-frame/dispatch [::events/update-ui [:terrain-id] id]))}]]
-
-       :tribes
-       [:div
-        [:h2 "TRIBES"]]
-
-       )
-
-     [pixi.universe/pixi-universe
-      {:universe @!world #_{
-                  ;; :terrain {
-                  ;;           :boxes {:bx-1 {:pos {:x 0.0, :y 0.0}
-                  ;;                          :size {:w 80.0 :h 80.0}}}}
-
-                  ;; :terrain (circles/circles-terrain {:t t})
-                  ;; :terrain (boxes/boxes-terrain {:t t})
-                  ;; :terrain (experimental/experimental-terrain {:t t})
-                  ;; :terrain @!terrain
-                  :terrain (:terrain @!world)
-                  :tribes (:tribes @!world)
-                  }
-       ;; :width 600
-       :height 600
-       :width width
-       ;; :height height
-
-       }
-      ]
-
-     #_[:div
-      [:div.d-lg-none
-       #_[:h4.text-light "Mobile"]
-       {:style {:margin-top 96}}
-
-       [menu/menu
-        {:items {
-                 :t-1 {:title "Terrain One"}
-                 :t-2 {:title "Terrain Two"}
-                 :t-3 {:title "Terrain Three"}
-                 }
-         :selected-id :t-2
-         :on-selected (fn [id] (js/alert (str id)))}]
-
-       [pixi.universe/pixi-universe
-        {:universe {
-                    ;; :terrain {
-                    ;;           :boxes {:bx-1 {:pos {:x 0.0, :y 0.0}
-                    ;;                          :size {:w 80.0 :h 80.0}}}}
-
-                    ;; :terrain (circles/circles-terrain {:t t})
-                    ;; :terrain (boxes/boxes-terrain {:t t})
-                    ;; :terrain (experimental/experimental-terrain {:t t})
-                    ;; :terrain @!terrain
-                    :terrain (:terrain @!world)
-                    :tribes (:tribes @!world)
-                    }
-         ;; :width 600
-         ;; :height 600
-         :width width
-         :height height
-
-         }
-        ]
-
-       ]
-      [:div.d-none.d-lg-block
-       #_[:h4.text-light "Desktop"]
-
-       {:style {:margin-top 96}}
-
-       [menu/menu
-        {:items {
-                 :t-1 {:title "Terrain One"}
-                 :t-2 {:title "Terrain Two"}
-                 :t-3 {:title "Terrain Three"}
-                 }
-         :selected-id :t-2
-         :on-selected (fn [id] #_(js/alert (str id)))}]
-
-       ]]
-
-
-     #_[pixi.universe/pixi-universe
-      {:universe {
-                  ;; :terrain {
-                  ;;           :boxes {:bx-1 {:pos {:x 0.0, :y 0.0}
-                  ;;                          :size {:w 80.0 :h 80.0}}}}
-
-                  ;; :terrain (circles/circles-terrain {:t t})
-                  ;; :terrain (boxes/boxes-terrain {:t t})
-                  ;; :terrain (experimental/experimental-terrain {:t t})
-                  ;; :terrain @!terrain
-                  :terrain (:terrain @!world)
-                  :tribes (:tribes @!world)
-                  }
-       ;; :width 600
-       ;; :height 600
-       :width width
-       :height height
-
-       }
-      ]
-     ]
-    ))
+        )]]))
 
