@@ -24,6 +24,16 @@ applications:
             - chmod +x linux-install.sh
             # 🛠️ 3. Install it locally without needing root privileges
             - ./linux-install.sh --prefix "$HOME/.local"
+
+            # 💧 2. Use the stable GitHub Release code mirror route directly
+            - curl -L -O https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+            
+            # 🛠️ 3. Make the launcher executable and assign it to global bin access
+            - chmod +x lein
+            - sudo mv lein /usr/local/bin/lein
+            
+            # 🚀 4. Fire up the core installer runtime
+            - lein --version
             - export PATH="$PATH:$HOME/.local/bin"
 
 
@@ -32,6 +42,9 @@ applications:
 
         build:
           commands:
+            - cd ../components
+            - lein install
+            - cd ../previewer
             - npm run release
       artifacts:
         baseDirectory: public # This is relative to your appRoot
