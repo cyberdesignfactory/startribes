@@ -47,7 +47,7 @@ applications:
             - cd ../previewer
             - npm run release
       artifacts:
-        baseDirectory: public # This is relative to your appRoot
+        baseDirectory: resources/public # This is relative to your appRoot
         files:
           - '**/*'
       cache:
