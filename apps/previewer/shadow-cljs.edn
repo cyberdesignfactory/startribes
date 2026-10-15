@@ -2,7 +2,7 @@
 
  ;; moved paths and deps to deps.edn
 
- :deps true
+ ;; :deps true
 
  ;; :source-paths ["src" "test"]
 
@@ -11,6 +11,10 @@
  ;;  [re-frame "1.4.2"]
 
  ;;  [binaryage/devtools "1.0.6"]]
+
+
+ ;; Tells shadow-cljs to handle dependency resolution internally without looking for the 'clojure' CLI.
+ :deps {:aliases []}
 
  :dev-http
  {8280 "resources/public"
