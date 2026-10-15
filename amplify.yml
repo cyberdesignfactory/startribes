@@ -16,7 +16,7 @@ applications:
             # 💧 2. Download and run the official Clojure installer script
 
             # ☕ 1. Install Java OpenJDK 17
-            - dnf install -y java-17-amazon-corretto-devel
+            - sudo dnf install -y java-17-amazon-corretto-devel
          
 
 
