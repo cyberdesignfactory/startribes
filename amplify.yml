@@ -1,0 +1,21 @@
+# This file lives at the REPO ROOT (/)
+version: 1
+applications:
+  - appRoot: apps/previewer
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: public # This is relative to your appRoot
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - .shadow-cljs/**/*
+
