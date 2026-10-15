@@ -15,6 +15,9 @@ applications:
             # - amazon-linux-extras install java-openjdk11 -y
             # 💧 2. Download and run the official Clojure installer script
 
+            # ☕ 1. Install Java OpenJDK 17
+            - dnf install -y java-17-amazon-corretto-devel
+         
 
 
             - curl -L -O https://github.com/clojure/brew-install/releases/latest/download/linux-install.sh
